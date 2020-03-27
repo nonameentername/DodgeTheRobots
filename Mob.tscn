@@ -1,0 +1,87 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Mob.cs" type="Script" id=1]
+[ext_resource path="res://art/clawbot/1/botzred4.png" type="Texture" id=2]
+[ext_resource path="res://art/clawbot/1/botzred3.png" type="Texture" id=3]
+[ext_resource path="res://art/clawbot/2/botzpurple2.png" type="Texture" id=4]
+[ext_resource path="res://art/clawbot/1/botzred2.png" type="Texture" id=5]
+[ext_resource path="res://art/clawbot/1/botzred1.png" type="Texture" id=6]
+[ext_resource path="res://art/clawbot/2/botzpurple1.png" type="Texture" id=7]
+[ext_resource path="res://art/clawbot/2/botzpurple3.png" type="Texture" id=9]
+[ext_resource path="res://art/clawbot/3/botzorange1.png" type="Texture" id=10]
+[ext_resource path="res://art/clawbot/2/botzpurple4.png" type="Texture" id=11]
+[ext_resource path="res://art/clawbot/3/botzorange2.png" type="Texture" id=12]
+[ext_resource path="res://art/clawbot/3/botzorange3.png" type="Texture" id=13]
+[ext_resource path="res://art/clawbot/3/botzorange4.png" type="Texture" id=14]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 6 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "fly",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 10 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ) ],
+"loop": true,
+"name": "walk",
+"speed": 4.0
+}, {
+"frames": [ ExtResource( 7 ), ExtResource( 4 ), ExtResource( 9 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "swim",
+"speed": 4.0
+} ]
+
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 1, 1, 1, 0.47451, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 0.545455 ), 0.0, 0.0, 0, 0, Vector2( 0.974684, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+
+[sub_resource type="CapsuleShape2D" id=7]
+radius = 33.8105
+height = 16.6909
+
+[node name="Mob" type="RigidBody2D"]
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+rotation = 1.5708
+scale = Vector2( 2, 2 )
+frames = SubResource( 1 )
+animation = "fly"
+
+[node name="Trail" type="Particles2D" parent="AnimatedSprite"]
+rotation = 1.5708
+scale = Vector2( 2, 2 )
+amount = 10
+speed_scale = 2.0
+local_coords = false
+process_material = SubResource( 6 )
+texture = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource( 7 )
+
+[node name="Visibility" type="VisibilityNotifier2D" parent="."]
+[connection signal="screen_exited" from="Visibility" to="." method="onVisibilityScreenExited"]
